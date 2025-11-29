@@ -1,13 +1,27 @@
 package com.example.cinemasystem;
 
+import lombok.extern.java.Log;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.jdbc.core.JdbcTemplate;
+
+import javax.sql.DataSource;
 
 @SpringBootApplication
-public class CinemaSystemApplication {
+@Log
+public class CinemaSystemApplication implements CommandLineRunner {
+    private final DataSource dataSource;
 
+    public CinemaSystemApplication(DataSource dataSource) { this.dataSource = dataSource; }
     public static void main(String[] args) {
         SpringApplication.run(CinemaSystemApplication.class, args);
     }
 
+    @Override
+    public void run(String... args) throws Exception {
+        log.info("Datasource " + dataSource.toString());
+        final JdbcTemplate template = new JdbcTemplate(dataSource);
+        template.execute("select 1");
+    }
 }
