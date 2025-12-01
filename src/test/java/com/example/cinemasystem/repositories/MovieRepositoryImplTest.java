@@ -4,6 +4,7 @@ import com.example.cinemasystem.domain.Movie;
 import com.example.cinemasystem.repositories.impl.MovieRepositoryImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentMatchers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -37,6 +38,17 @@ public class MovieRepositoryImplTest {
         verify(jdbcTemplate).update(
                 eq("INSERT INTO movies (id, title, description, genre, director, productionYear) VALUES(?, ?, ?, ?, ?, ?)"),
                 eq(1L), eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000)
+        );
+    }
+
+    @Test
+    public void testThatFindOneGeneratesCorrectSql() {
+        underTest.findOne(1L);
+
+        verify(jdbcTemplate).query(
+                eq("SELECT * FROM movies WHERE id = ? LIMIT 1"),
+                ArgumentMatchers.<MovieRepositoryImpl.MovieRowMapper>any(),
+                eq(1L)
         );
     }
 }
