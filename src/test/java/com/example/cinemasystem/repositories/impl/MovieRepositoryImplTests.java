@@ -1,7 +1,7 @@
-package com.example.cinemasystem.repositories;
+package com.example.cinemasystem.repositories.impl;
 
 import com.example.cinemasystem.domain.Movie;
-import com.example.cinemasystem.repositories.impl.MovieRepositoryImpl;
+import com.example.cinemasystem.utils.TestDataUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentMatchers;
@@ -14,7 +14,7 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-public class MovieRepositoryImplTest {
+public class MovieRepositoryImplTests {
 
     @Mock
     private JdbcTemplate jdbcTemplate;
@@ -24,19 +24,12 @@ public class MovieRepositoryImplTest {
 
     @Test
     public void testThatCreateMovieGeneratesCorrectSql() {
-        Movie movie = Movie.builder()
-                .id(1L)
-                .title("Gladiator")
-                .description("Gladiator movie description")
-                .genre("Action")
-                .director("Ridley Scot")
-                .productionYear(2000)
-                .build();
+        Movie movie = TestDataUtil.createTestMovie();
 
         underTest.create(movie);
 
         verify(jdbcTemplate).update(
-                eq("INSERT INTO movies (id, title, description, genre, director, productionYear) VALUES(?, ?, ?, ?, ?, ?)"),
+                eq("INSERT INTO movies (id, title, description, genre, director, production_year) VALUES(?, ?, ?, ?, ?, ?)"),
                 eq(1L), eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000)
         );
     }

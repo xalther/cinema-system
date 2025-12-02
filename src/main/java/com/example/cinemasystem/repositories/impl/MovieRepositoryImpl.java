@@ -4,12 +4,16 @@ import com.example.cinemasystem.domain.Movie;
 import com.example.cinemasystem.repositories.MovieRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
+
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
+
+@Component
 public class MovieRepositoryImpl implements MovieRepository {
     private final JdbcTemplate jdbcTemplate;
 
@@ -20,7 +24,7 @@ public class MovieRepositoryImpl implements MovieRepository {
     @Override
     public void create(Movie movie) {
         jdbcTemplate.update(
-                "INSERT INTO movies (id, title, description, genre, director, productionYear) VALUES(?, ?, ?, ?, ?, ?)",
+                "INSERT INTO movies (id, title, description, genre, director, production_year) VALUES(?, ?, ?, ?, ?, ?)",
                 movie.getId(), movie.getTitle(), movie.getDescription(), movie.getGenre(), movie.getDirector(), movie.getProductionYear()
         );
     }
