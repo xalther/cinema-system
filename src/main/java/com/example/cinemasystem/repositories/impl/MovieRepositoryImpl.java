@@ -36,6 +36,11 @@ public class MovieRepositoryImpl implements MovieRepository {
         return results.stream().findFirst();
     }
 
+    @Override
+    public List<Movie> findMany() {
+        return jdbcTemplate.query("SELECT * FROM movies", new MovieRowMapper());
+    }
+
     public static class MovieRowMapper implements RowMapper<Movie> {
 
         @Override

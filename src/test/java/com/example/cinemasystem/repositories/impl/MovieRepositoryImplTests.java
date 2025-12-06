@@ -24,7 +24,7 @@ public class MovieRepositoryImplTests {
 
     @Test
     public void testThatCreateMovieGeneratesCorrectSql() {
-        Movie movie = TestDataUtil.createTestMovie();
+        Movie movie = TestDataUtil.createTestMovieA();
 
         underTest.create(movie);
 
@@ -42,6 +42,16 @@ public class MovieRepositoryImplTests {
                 eq("SELECT * FROM movies WHERE id = ? LIMIT 1"),
                 ArgumentMatchers.<MovieRepositoryImpl.MovieRowMapper>any(),
                 eq(1L)
+        );
+    }
+
+    @Test
+    public void testThatFindManyGeneratesCorrectSql() {
+        underTest.findMany();
+
+        verify(jdbcTemplate).query(
+                eq("SELECT * FROM movies"),
+                ArgumentMatchers.<MovieRepositoryImpl.MovieRowMapper>any()
         );
     }
 }
