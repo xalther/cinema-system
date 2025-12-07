@@ -48,4 +48,28 @@ public class MovieRepositoryImplIntegrationTests {
         List<Movie> result = underTest.findMany();
         assertThat(result).hasSize(3).containsExactly(movieA, movieB, movieC);
     }
+
+    @Test
+    public void testThatMovieCanBeUpdatedAndRecalled() {
+        Movie movieA = TestDataUtil.createTestMovieA();
+        underTest.create(movieA);
+
+        movieA.setTitle("UPDATED");
+        underTest.update(movieA.getId(), movieA);
+        Optional<Movie> result = underTest.findOne(movieA.getId());
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(movieA);
+    }
+
+    @Test
+    public void testThatMovieCanBeDeleted() {
+        Movie movieA = TestDataUtil.createTestMovieA();
+        underTest.create(movieA);
+
+        underTest.delete(movieA.getId());
+        Optional<Movie> result = underTest.findOne(movieA.getId());
+
+        assertThat(result).isEmpty();
+    }
 }

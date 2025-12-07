@@ -11,4 +11,8 @@ public interface MovieRepository {
     Optional<Movie> findOne(long id);
 
     List<Movie> findMany();
+
+    void update(long id, Movie movie);
+
+    void delete(long id);
 }

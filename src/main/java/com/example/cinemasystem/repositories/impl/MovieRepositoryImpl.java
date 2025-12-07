@@ -41,6 +41,18 @@ public class MovieRepositoryImpl implements MovieRepository {
         return jdbcTemplate.query("SELECT * FROM movies", new MovieRowMapper());
     }
 
+    @Override
+    public void update(long id, Movie movie) {
+        jdbcTemplate.update("UPDATE movies SET id = ?, title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?",
+                movie.getId(), movie.getTitle(), movie.getDescription(), movie.getGenre(), movie.getDirector(), movie.getProductionYear(), id
+        );
+    }
+
+    @Override
+    public void delete(long id) {
+        jdbcTemplate.update("DELETE FROM movies WHERE id = ?", id);
+    }
+
     public static class MovieRowMapper implements RowMapper<Movie> {
 
         @Override

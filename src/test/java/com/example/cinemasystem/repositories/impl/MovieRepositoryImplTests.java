@@ -54,4 +54,26 @@ public class MovieRepositoryImplTests {
                 ArgumentMatchers.<MovieRepositoryImpl.MovieRowMapper>any()
         );
     }
+
+    @Test
+    public void testThatUpdateMovieGeneratesCorrectSql() {
+        Movie movie = TestDataUtil.createTestMovieA();
+
+        underTest.update(2L, movie);
+
+        verify(jdbcTemplate).update(
+                eq("UPDATE movies SET id = ?, title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?"),
+                eq(1L), eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000), eq(2L)
+        );
+    }
+
+    @Test
+    public void testThatDeleteMovieGeneratesCorrectSql() {
+        underTest.delete(1L);
+
+        verify(jdbcTemplate).update(
+                eq("DELETE FROM movies WHERE id = ?"),
+                eq(1L)
+        );
+    }
 }
