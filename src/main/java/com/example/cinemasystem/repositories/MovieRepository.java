@@ -6,13 +6,13 @@ import java.util.List;
 import java.util.Optional;
 
 public interface MovieRepository {
-    void create(Movie movie);
+    Movie create(Movie movie);
 
     Optional<Movie> findOne(long id);
 
     List<Movie> findMany();
 
-    void update(long id, Movie movie);
+    boolean update(long id, Movie movie);
 
-    void delete(long id);
+    boolean delete(long id);
 }

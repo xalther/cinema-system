@@ -22,17 +22,6 @@ public class MovieRepositoryImplTests {
     @InjectMocks
     private MovieRepositoryImpl underTest;
 
-    @Test
-    public void testThatCreateMovieGeneratesCorrectSql() {
-        Movie movie = TestDataUtil.createTestMovieA();
-
-        underTest.create(movie);
-
-        verify(jdbcTemplate).update(
-                eq("INSERT INTO movies (id, title, description, genre, director, production_year) VALUES(?, ?, ?, ?, ?, ?)"),
-                eq(1L), eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000)
-        );
-    }
 
     @Test
     public void testThatFindOneGeneratesCorrectSql() {
@@ -62,8 +51,8 @@ public class MovieRepositoryImplTests {
         underTest.update(2L, movie);
 
         verify(jdbcTemplate).update(
-                eq("UPDATE movies SET id = ?, title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?"),
-                eq(1L), eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000), eq(2L)
+                eq("UPDATE movies SET title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?"),
+                eq("Gladiator"), eq("Gladiator movie description"), eq("Action"), eq("Ridley Scot"), eq(2000), eq(2L)
         );
     }
 

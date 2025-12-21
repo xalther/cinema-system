@@ -19,7 +19,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 @DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_EACH_TEST_METHOD)
 public class MovieRepositoryImplIntegrationTests {
 
-    private MovieRepositoryImpl underTest;
+    private final MovieRepositoryImpl underTest;
 
     @Autowired
     public MovieRepositoryImplIntegrationTests(MovieRepositoryImpl underTest) {

@@ -4,8 +4,8 @@ import com.example.cinemasystem.domain.Movie;
 import com.example.cinemasystem.repositories.MovieRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Component;
-
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -22,11 +22,26 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
-    public void create(Movie movie) {
-        jdbcTemplate.update(
-                "INSERT INTO movies (id, title, description, genre, director, production_year) VALUES(?, ?, ?, ?, ?, ?)",
-                movie.getId(), movie.getTitle(), movie.getDescription(), movie.getGenre(), movie.getDirector(), movie.getProductionYear()
-        );
+    public Movie create(Movie movie) {
+        GeneratedKeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(connection -> {
+            var ps = connection.prepareStatement(
+                    "INSERT INTO movies (title, description, genre, director, production_year) VALUES (?, ?, ?, ?, ?)",
+                    new String[]{"id"}
+            );
+            ps.setString(1, movie.getTitle());
+            ps.setString(2, movie.getDescription());
+            ps.setString(3, movie.getGenre());
+            ps.setString(4, movie.getDirector());
+            ps.setObject(5, movie.getProductionYear());
+            return ps;
+        }, keyHolder);
+
+        long generatedId = keyHolder.getKey().longValue();
+        movie.setId(generatedId);
+
+        return movie;
     }
 
     @Override
@@ -42,15 +57,17 @@ public class MovieRepositoryImpl implements MovieRepository {
     }
 
     @Override
-    public void update(long id, Movie movie) {
-        jdbcTemplate.update("UPDATE movies SET id = ?, title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?",
-                movie.getId(), movie.getTitle(), movie.getDescription(), movie.getGenre(), movie.getDirector(), movie.getProductionYear(), id
+    public boolean update(long id, Movie movie) {
+        int updated = jdbcTemplate.update("UPDATE movies SET title = ?, description = ?, genre = ?, director = ?, production_year = ? WHERE id = ?",
+                movie.getTitle(), movie.getDescription(), movie.getGenre(), movie.getDirector(), movie.getProductionYear(), id
         );
+        return updated > 0;
     }
 
     @Override
-    public void delete(long id) {
-        jdbcTemplate.update("DELETE FROM movies WHERE id = ?", id);
+    public boolean delete(long id) {
+        int rowsAffected = jdbcTemplate.update("DELETE FROM movies WHERE id = ?", id);
+        return rowsAffected > 0;
     }
 
     public static class MovieRowMapper implements RowMapper<Movie> {
